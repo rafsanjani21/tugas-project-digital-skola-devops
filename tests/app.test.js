@@ -38,3 +38,25 @@ test('DELETE /notes/:id should remove note', async () => {
   const res = await request(app).delete(`/notes/${created.body.id}`);
   expect(res.status).toBe(204);
 });
+
+test('POST /notes without body should fail', async () => {
+  const res = await request(app).post('/notes').send({});
+  expect(res.status).toBe(400);
+});
+
+test('PUT /notes/:id with invalid id should return 404', async () => {
+  const res = await request(app)
+    .put('/notes/999')
+    .send({ title: 'x' });
+  expect(res.status).toBe(404);
+});
+
+test('DELETE /notes/:id with invalid id should return 404', async () => {
+  const res = await request(app).delete('/notes/999');
+  expect(res.status).toBe(404);
+});
+
+test('GET unknown route should return 404', async () => {
+  const res = await request(app).get('/unknown');
+  expect(res.status).toBe(404);
+});
